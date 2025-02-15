@@ -42,7 +42,7 @@ crds:
 global:
   # -- Default domain used by all components
   ## Used for ingresses, certificates, SSO, notifications, etc.
-  domain: argocd.homelab.com
+  domain: argocd-dev.homelab.com
 
   # -- Runtime class name for all components
   runtimeClassName: ""
@@ -512,26 +512,11 @@ configs:
 
   # -- Repository credentials to be used as Templates for other repos
   ## Creates a secret for each key/value specified below to create repository credentials
-  credentialTemplates: {}
-    # github-enterprise-creds-1:
-    #   url: https://github.com/argoproj
-    #   githubAppID: 1
-    #   githubAppInstallationID: 2
-    #   githubAppEnterpriseBaseUrl: https://ghe.example.com/api/v3
-    #   githubAppPrivateKey: |
-    #     -----BEGIN OPENSSH PRIVATE KEY-----
-    #     ...
-    #     -----END OPENSSH PRIVATE KEY-----
-    # https-creds:
-    #   url: https://github.com/argoproj
-    #   password: my-password
-    #   username: my-username
-    # ssh-creds:
-    #  url: git@github.com:argoproj-labs
-    #  sshPrivateKey: |
-    #    -----BEGIN OPENSSH PRIVATE KEY-----
-    #    ...
-    #    -----END OPENSSH PRIVATE KEY-----
+  credentialTemplates:
+    github:
+      url: "{{ .Values.github.url }}"
+      password: "{{ .Values.github.password }}"
+      username: "{{ .Values.github.username }}"
 
   # -- Annotations to be added to `configs.credentialTemplates` Secret
   credentialTemplatesAnnotations: {}
@@ -539,7 +524,11 @@ configs:
   # -- Repositories list to be used by applications
   ## Creates a secret for each key/value specified below to create repositories
   ## Note: the last example in the list would use a repository credential template, configured under "configs.credentialTemplates".
-  repositories: {}
+  repositories:
+    app-configs:
+      url: https://github.com/shuffleSoftware/app-configs
+    cluster-addons:
+      url: https://github.com/shuffleSoftware/cluster-addons
     # istio-helm-repo:
     #   url: https://storage.googleapis.com/istio-prerelease/daily-build/master-latest-daily/charts
     #   name: istio.io
@@ -2237,7 +2226,7 @@ server:
 
     # -- Argo CD server hostname
     # @default -- `""` (defaults to global.domain)
-    hostname: "argocd.homelab.com"
+    hostname: "argocd-dev.homelab.com"
 
     # -- The path to Argo CD server
     path: /

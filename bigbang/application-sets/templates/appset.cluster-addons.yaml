@@ -27,6 +27,13 @@ spec:
           valueFiles:
           - ../values.default.yaml
           - values.yaml
+          parameters:
+          - name: "custom_github_url"
+            value: {{ .Values.custom_github_url }}
+          - name: "custom_github_username"
+            value: {{ .Values.custom_github_username }}
+          - name: "custom_github_password"
+            value: {{ .Values.custom_github_password }}
       destination:
         server: https://kubernetes.default.svc
         namespace: '{{ "{{config.namespace}}" }}'
